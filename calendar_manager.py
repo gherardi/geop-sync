@@ -46,7 +46,35 @@ class CalendarManager:
     
     def create_event(self, lecture: LectureData) -> Optional[str]:
         """Create a calendar event for a lecture and return the event ID"""
-        pass
+        try:
+            start_datetime = f"{lecture.date}T{self._format_time(lecture.start_time)}+02:00"
+            end_datetime = f"{lecture.date}T{self._format_time(lecture.end_time)}+02:00"
+            
+            event = {
+                "summary": lecture.subject,
+                "description": lecture.professor,
+                "start": {
+                    "dateTime": start_datetime,
+                    "timeZone": TIMEZONE
+                },
+                "end": {
+                    "dateTime": end_datetime,
+                    "timeZone": TIMEZONE
+                },
+                "location": lecture.classroom
+            }
+            
+            created_event = self.service.events().insert(
+                calendarId=self.config.google_calendar_id,
+                body=event
+            ).execute()
+            
+            event_id = created_event.get('id')
+            logger.debug(f"Created calendar event: {event_id} for {lecture.subject}")
+            return event_id
+        except Exception as e:
+            logger.error(f"Failed to create calendar event for {lecture.subject}: {str(e)}")
+            return None
     
     def _format_time(self, time_str: str) -> str:
         """Ensure time string is in HH:MM:SS format"""
