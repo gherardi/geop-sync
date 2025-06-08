@@ -26,7 +26,7 @@ This script automates the process of scraping your GEOP portal for upcoming lect
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/gherardi/geop-sync
+   git clone https://github.com/gherardi/geop-sync.git
    cd geop-sync-scraper
    ```
 
