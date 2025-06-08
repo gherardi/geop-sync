@@ -93,4 +93,12 @@ class DatabaseManager:
     
     def update_lecture_calendar_id(self, lecture_id: int, calendar_event_id: str) -> bool:
         """Update lecture with calendar event ID"""
-        pass
+        try:
+            response = self.client.table("lectures").update({
+                "calendar_event_id": calendar_event_id
+            }).eq("id", lecture_id).execute()
+
+            return True
+        except Exception as e:
+            logger.error(f"Failed to update lecture {lecture_id} with calendar ID: {str(e)}")
+            return False
